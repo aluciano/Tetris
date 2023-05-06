@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity\Peca.cs" />
-    <Compile Include="Entity\PosicaoPeca.cs" />
     <Compile Include="Enumerators\PecaEnum.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -18,7 +18,7 @@ namespace Tetris
             DesenharAreaJogo();
             EscreverPecaAtual();
 
-            var tempo = DateTime.Now;
+            DateTime tempo = DateTime.Now;
             ConsoleKeyInfo tecla = default;
 
             bool fimDeJogo = false;
