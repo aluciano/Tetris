@@ -55,8 +55,8 @@ namespace Tetris.Entity
             if (!metadeLarguraEhPar)
                 metadeLargura++;
             
-            Esquerda = 3 + 25 - metadeLargura;
-            Topo = 3;
+            Esquerda = 2 + 25 - metadeLargura;
+            Topo = 2;
         }
 
         public PecaEnum Tipo { get; set; }

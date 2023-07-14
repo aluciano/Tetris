@@ -7,8 +7,6 @@ namespace Tetris
     {
         static void Main(string[] args)
         {
-            ConsoleWindowPositionOnScreen.SetConsoleWindowPositionOnScreen();
-
             Tetris tetris = new Tetris();
             Console.ReadKey();
         }

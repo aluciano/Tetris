@@ -1,6 +1,6 @@
 ﻿namespace Tetris.Enumerators
 {
-    public enum PecaEnum
+    public enum TipoPecaEnum
     {
         Quadrado1 = 1,
         Quadrado4 = 2,

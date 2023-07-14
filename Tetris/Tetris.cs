@@ -12,9 +12,10 @@ namespace Tetris
         public Tetris()
         {
             Console.CursorVisible = false;
+            ConsoleWindowPositionOnScreen.SetConsoleWindowPositionOnScreen();
             Console.WindowWidth = 100;
-            Console.WindowHeight = 53;
-            PecaAtual = new Peca(ObterPecaAleatoria());
+            Console.WindowHeight = 30;
+            PecaAtual = new Peca(ObterTipoPecaAleatorio());
             DesenharAreaJogo();
             EscreverPecaAtual();
 
@@ -24,12 +25,14 @@ namespace Tetris
             bool fimDeJogo = false;
             while (!fimDeJogo)
             {
+                //A cada 2 segundos (no nível 1) o jogo move a peça atual para baixo
                 if (DateTime.Now > tempo.AddSeconds(2))
                 {
                     fimDeJogo = MoverPecaAtualParaBaixo();
                     tempo = DateTime.Now;
                 }
 
+                //Enquanto não passam os 2 segundos, o jogador pode fazer seus movimentos
                 if (!fimDeJogo)
                 {
                     AplicarMovimentoJogador(tecla);
@@ -98,19 +101,74 @@ namespace Tetris
             return false;
         }
 
-        private PecaEnum ObterPecaAleatoria()
+        private TipoPecaEnum ObterTipoPecaAleatorio()
         {
-            Array values = Enum.GetValues(typeof(PecaEnum));
+            Array values = Enum.GetValues(typeof(TipoPecaEnum));
             Random random = new Random();
-            return (PecaEnum)values.GetValue(random.Next(values.Length));
+            return (TipoPecaEnum)values.GetValue(random.Next(values.Length));
         }
 
-        public bool MoverPecaAtualParaBaixo()
+        private bool ExisteLinhaCompleta(int linha)
+        {
+            for (int coluna = 3; coluna <= 53; coluna++)
+            {
+                char parteLinha = ReadConsolePosition.ObterCaracterNaPosicao(coluna, linha);
+
+                if (parteLinha == ' ')
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void MoverLinhasSuperioresParaBaixo(int linha)
+        {
+            //verificar se existem linhas preenchidas acima da linha atual e mover para baixo
+            for (int coluna = 3; coluna <= 53; coluna++)
+            {
+                char parteLinha = ReadConsolePosition.ObterCaracterNaPosicao(coluna, linha);
+
+                if (parteLinha == ' ')
+                {
+                    return false;
+                }
+            }
+        }
+
+        private void RemoverLinha(int linha)
+        {
+            Console.ResetColor();
+            Console.SetCursorPosition(3, linha);
+            Console.Write($" ".PadRight(49, " "));
+        }
+
+        private void RemoverLinhas()
+        {
+            var linhaAtual = PecaAtual.Topo;
+            var linhaFinal = PecaAtual.Topo + PecaAtual.Altura - 1;
+
+            while (linhaAtual <= linhaFinal)
+            {
+                if (ExisteLinhaCompleta(linhaInicial))
+                {
+                    RemoverLinha(linhaAtual)
+
+                    MoverLinhasSuperioresParaBaixo(linhaAtual);                    
+                }
+
+                linhaAtual++;
+            }
+        }
+
+        private bool MoverPecaAtualParaBaixo()
         {
             if (EspacoPreenchidoAbaixoPecaAtual())
             {
-                PecaAtual = new Peca(ObterPecaAleatoria());
-                //PecaAtual = new PosicaoPeca(4 + 25 - (PecaAtual.Largura / 2), 3);
+                RemoverLinhas();
+
+                PecaAtual = new Peca(ObterTipoPecaAleatorio());
                 EscreverPecaAtual();
 
                 return EspacoPreenchidoAbaixoPecaAtual();
@@ -183,15 +241,15 @@ namespace Tetris
 
         private void DesenharAreaJogo()
         {
-            Console.SetCursorPosition(2, 2);
+            Console.SetCursorPosition(1, 1);
 
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("0".PadRight(54, '0'));
 
-            for (int i = 1; i <= 46; i++)
+            for (int i = 2; i <= Console.WindowHeight - 4; i++)
             {
-                Console.SetCursorPosition(2, 2 + i);
+                Console.SetCursorPosition(1, i);
 
                 Console.BackgroundColor = ConsoleColor.White;
                 Console.ForegroundColor = ConsoleColor.White;
@@ -203,7 +261,7 @@ namespace Tetris
                 Console.WriteLine("00");
             }
 
-            Console.SetCursorPosition(2, 49);
+            Console.SetCursorPosition(1, Console.WindowHeight - 3);
 
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.White;

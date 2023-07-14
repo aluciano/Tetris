@@ -25,8 +25,8 @@ namespace Tetris.Util
             // !! away from the true edge of the screen / taskbar.
             wp.NormalPosition = new RECT()
             {
-                Left = 7,
-                Top = 10
+                Left = 0,
+                Top = 0
             };
 
             // Place the window at the new position.
@@ -76,8 +76,6 @@ namespace Tetris.Util
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
-
-        const uint SW_RESTORE = 9;
 
         [StructLayout(LayoutKind.Sequential)]
         struct WINDOWPLACEMENT
